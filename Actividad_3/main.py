@@ -96,9 +96,9 @@ while(capture.isOpened()):
     frameGray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Cambiar video a escala de gris
     frameHsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    cv2.imshow("frame", frame) # Solo se reproduce imagen, no sonido 
-    cv2.imshow("frameGray", frameGray)
-    cv2.imshow("frameHsv", frameHsv)
+    # cv2.imshow("frame", frame) # Solo se reproduce imagen, no sonido 
+    # cv2.imshow("frameGray", frameGray)
+    # cv2.imshow("frameHsv", frameHsv)
 
     # Escribir el frame en el archivo de video
     # video_writer.write(frame)
@@ -107,6 +107,19 @@ while(capture.isOpened()):
 
     cv2.imshow("videoBinary", videoBinary)
     key = cv2.waitKey(30)
+
+    franja=np.sum(videoBinary[:,330:360])
+    franja=franja/255
+    print(franja)
+
+    if (franja>100 and moneda):
+        print("se detecto un objeto")
+        num_monedas+=1
+        moneda=False
+        print("numero de monedas",num_monedas)
+    if (franja<10):
+        moneda=True
+
 
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
