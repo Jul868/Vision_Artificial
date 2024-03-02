@@ -10,7 +10,7 @@ import urllib.request
 #pathCamUsb = 0
 pathCameraPhone = "http://192.168.80.219:8080/shot.jpg"
 
-#capture = cv2.VideoCapture(pathCameraPhone)
+#capture = cv2.VideoCapture(pathCameraPhone) # Se pone 0 en vez de pathCamUsb para usar la cámara de la laptop
 #time.sleep(2)
 
 #while(capture.isOpened()):

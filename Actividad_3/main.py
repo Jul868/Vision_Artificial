@@ -64,67 +64,71 @@ def nothing(x):
     pass
 
 
-capture = cv2.VideoCapture(pathVideo)
-time.sleep(2)
+def main():
+    capture = cv2.VideoCapture(pathVideo)
+    time.sleep(2)
 
-cv2.namedWindow("frameHsv")
-cv2.createTrackbar('Low',"frameHsv", 0, 255, nothing)
-cv2.createTrackbar('High',"frameHsv", 0, 255, nothing)
-cv2.createTrackbar('Low2',"frameHsv", 0, 255, nothing)
-cv2.createTrackbar('High2',"frameHsv", 0, 255, nothing)
-cv2.createTrackbar('Low3',"frameHsv", 0, 255, nothing)
-cv2.createTrackbar('High3',"frameHsv", 0, 255, nothing)
-
-
-moneda=True
-num_monedas=0  
-
-while(capture.isOpened()):
-    Hmin = cv2.getTrackbarPos('Low',"frameHsv")
-    Hmax = cv2.getTrackbarPos('High',"frameHsv")
-    Smin = cv2.getTrackbarPos('Low2',"frameHsv")
-    Smax = cv2.getTrackbarPos('High2',"frameHsv")
-    Vmin = cv2.getTrackbarPos('Low3',"frameHsv")
-    Vmax = cv2.getTrackbarPos('High3',"frameHsv")
-    ret, frame = capture.read() 
- 
-
-    if (not ret): 
-        break 
-
-    # Cambiar el color del video 
-    frameGray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Cambiar video a escala de gris
-    frameHsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-    # cv2.imshow("frame", frame) # Solo se reproduce imagen, no sonido 
-    # cv2.imshow("frameGray", frameGray)
-    # cv2.imshow("frameHsv", frameHsv)
-
-    # Escribir el frame en el archivo de video
-    # video_writer.write(frame)
-
-    videoBinary = cv2.inRange(frameHsv, (0, 0, 16), (255, 73, 255))
-
-    cv2.imshow("videoBinary", videoBinary)
-    key = cv2.waitKey(30)
-
-    franja=np.sum(videoBinary[:,330:360])
-    franja=franja/255
-    print(franja)
-
-    if (franja>100 and moneda):
-        print("se detecto un objeto")
-        num_monedas+=1
-        moneda=False
-        print("numero de monedas",num_monedas)
-    if (franja<10):
-        moneda=True
+    cv2.namedWindow("frameHsv")
+    cv2.createTrackbar('Low',"frameHsv", 0, 255, nothing)
+    cv2.createTrackbar('High',"frameHsv", 0, 255, nothing)
+    cv2.createTrackbar('Low2',"frameHsv", 0, 255, nothing)
+    cv2.createTrackbar('High2',"frameHsv", 0, 255, nothing)
+    cv2.createTrackbar('Low3',"frameHsv", 0, 255, nothing)
+    cv2.createTrackbar('High3',"frameHsv", 0, 255, nothing)
 
 
-    if cv2.waitKey(30) & 0xFF == ord('q'):
-        break
+    moneda=True
+    num_monedas=0  
 
-# cv2.imwrite('imagenes/1000_3.jpg', frame)
-capture.release()
-# video_writer.release()
-cv2.destroyAllWindows()
+    while(capture.isOpened()):
+        Hmin = cv2.getTrackbarPos('Low',"frameHsv")
+        Hmax = cv2.getTrackbarPos('High',"frameHsv")
+        Smin = cv2.getTrackbarPos('Low2',"frameHsv")
+        Smax = cv2.getTrackbarPos('High2',"frameHsv")
+        Vmin = cv2.getTrackbarPos('Low3',"frameHsv")
+        Vmax = cv2.getTrackbarPos('High3',"frameHsv")
+        ret, frame = capture.read() 
+    
+
+        if (not ret): 
+            break 
+
+        # Cambiar el color del video 
+        frameGray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Cambiar video a escala de gris
+        frameHsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+        # cv2.imshow("frame", frame) # Solo se reproduce imagen, no sonido 
+        # cv2.imshow("frameGray", frameGray)
+        # cv2.imshow("frameHsv", frameHsv)
+
+        # Escribir el frame en el archivo de video
+        # video_writer.write(frame)
+
+        videoBinary = cv2.inRange(frameHsv, (0, 0, 16), (255, 73, 255))
+
+        cv2.imshow("videoBinary", videoBinary)
+        key = cv2.waitKey(30)
+
+        franja=np.sum(videoBinary[:,330:360])
+        franja=franja/255
+        print(franja)
+
+        if (franja>100 and moneda):
+            print("se detecto un objeto")
+            num_monedas+=1
+            moneda=False
+            print("numero de monedas",num_monedas)
+        if (franja<10):
+            moneda=True
+
+
+        if cv2.waitKey(30) & 0xFF == ord('q'):
+            break
+
+    # cv2.imwrite('imagenes/1000_3.jpg', frame)
+    capture.release()
+    # video_writer.release()
+    destroy()
+
+if __name__=="__main__":
+    main()
