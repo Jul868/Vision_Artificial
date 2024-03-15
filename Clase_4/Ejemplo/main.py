@@ -106,7 +106,7 @@ while(capture.isOpened()):
     videoBinary = cv2.inRange(frameHsv, (0, 0, 16), (255, 73, 255))
 
     cv2.imshow("videoBinary", videoBinary)
-    key = cv2.waitKey(30)
+    key = cv2.waitKey(0)
 
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break

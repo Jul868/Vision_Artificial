@@ -19,7 +19,7 @@ class App(ttk.Frame):
         try:
             super().__init__(master)
             self.logReport = reportLog.ReportLog()
-            if not os.path.isfile('app/images/arm_1.png'):
+            if not os.path.isfile('arm_1.png'):
                 print(f"Error: The file does not exist")
                 sys.exit(1)
 

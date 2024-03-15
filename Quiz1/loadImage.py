@@ -4,7 +4,7 @@ import numpy as np
 
 
 class LoadImage():
-    def __init__(self, path= 'app/images/arm_1.png'):
+    def __init__(self, path= 'arm_1.png'):
         try:
             print(path)
             self.path = path
