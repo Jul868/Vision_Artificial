@@ -1,6 +1,7 @@
 import reportLog
 import cv2
 import threading
+import numpy as np
 
 class runCamera:
     def __init__(self, src = 0, name = "CameraThread"):
