@@ -29,8 +29,14 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.pack
             self.panel = None
 
-            self.num_monedas = 0
+            self.total_monedas = 0
             self.moneda = True
+
+            self.moneda_1000 = 0
+            self.moneda_500 = 0
+            self.moneda_100 = 0
+            self.moneda_200 = 0
+            self.moneda_50 = 0
 
             self.createWidgets()
             self.createFrameZeros()
@@ -69,34 +75,34 @@ class Application(ttk.Frame): # Se le da estructura de un frame
         self.lblNameCameraBinary.place(x=370, y=5) # Ubico el texto 
 
         # Monedas 50 
-        moneda50 = str(0)
-        self.lblMoneda50 = tk.Label(self.master, text="Monedas de 50: "+ moneda50, fg="#000000")
+        moneda50 = str(self.moneda_50)
+        self.lblMoneda50 = tk.Label(self.master, text="Monedas de 50: "+ str(moneda50), fg="#000000")
         self.lblMoneda50['font'] = self.fontText # Toma la propiedad del texto 
         self.lblMoneda50.place(x=720, y=30) # Ubico el texto 
 
         # Monedas 100 
-        moneda100 = str(0)
+        moneda100 = str(self.moneda_100)
         self.lblMoneda100 = tk.Label(self.master, text="Monedas de 100: "+ moneda100, fg="#000000")
         self.lblMoneda100['font'] = self.fontText # Toma la propiedad del texto 
         self.lblMoneda100.place(x=720, y=50) # Ubico el texto 
 
         # Monedas 200 
-        moneda200 = str(0)
+        moneda200 = str(self.moneda_200)
         self.lblMoneda200 = tk.Label(self.master, text="Monedas de 200: "+ moneda200, fg="#000000")
         self.lblMoneda200['font'] = self.fontText # Toma la propiedad del texto 
         self.lblMoneda200.place(x=720, y=70) # Ubico el texto 
 
         # Monedas 500 
-        moneda500 = str(0)
+        moneda500 = str(self.moneda_500)
         self.lblMoneda500 = tk.Label(self.master, text="Monedas de 500: "+ moneda500, fg="#000000")
         self.lblMoneda500['font'] = self.fontText # Toma la propiedad del texto 
         self.lblMoneda500.place(x=720, y=90) # Ubico el texto 
 
         # Monedas 1000 
-        moneda1000 = str(0)
+        moneda1000 = str(self.moneda_1000)
         self.lblMoneda1000 = tk.Label(self.master, text="Monedas de 1000: "+ moneda1000, fg="#000000")
         self.lblMoneda1000['font'] = self.fontText # Toma la propiedad del texto 
-        self.lblMoneda1000.place(x=720, y=110) # Ubico el texto 
+        self.lblMoneda1000.place(x=720, y=110) # Ubico el texto
 
         self.btnInitCamera = tk.Button(self.master,
                                        text="Iniciar",
@@ -126,7 +132,12 @@ class Application(ttk.Frame): # Se le da estructura de un frame
         self.camera.start()
         self.getFrameInLabel()
         self.getFrameInLabelBinary()
-        self.num_monedas = 0 
+        #self.num_monedas = 0 
+        #self.moneda_1000 = 0
+        #self.moneda_500 = 0
+        #self.moneda_100 = 0
+        #self.moneda_200 = 0
+        #self.moneda_50 = 0
         # print("init")
 
     def stopCameraProcess(self):
@@ -137,13 +148,15 @@ class Application(ttk.Frame): # Se le da estructura de un frame
         try:
             if (self.camera.grabbed):
                 frameCamera = self.camera.frame 
-                frame = cv2.resize(frameCamera, (320,240))
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) 
-                imgArray = Image.fromarray(frame)  
+                self.frame = cv2.resize(frameCamera, (320,240))
+                self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB) 
+                imgArray = Image.fromarray(self.frame)  
                 imgTk = ImageTk.PhotoImage(image=imgArray) 
                 self.lblVideo.configure(image = imgTk)
                 self.lblVideo.image = imgTk
-                self.lblVideo.after(10, self.getFrameInLabel) # Cada cuanto se va a pedir un label 
+
+                # self.identificarMonedas()
+                self.lblVideo.after(90, self.getFrameInLabel) # Cada cuanto se va a pedir un label 
 
         except Exception as e:
             self.logReport.logger.error("Error in getFrameInLabel" + str(e)) 
@@ -163,7 +176,8 @@ class Application(ttk.Frame): # Se le da estructura de un frame
                 self.lblVideoBinary.image = imgTk2
 
                 self.totalMonedas()
-                self.lblVideoBinary.after(10, self.getFrameInLabelBinary)
+                self.identificarMonedas()
+                self.lblVideoBinary.after(90, self.getFrameInLabelBinary)
 
         except Exception as e:
             self.logReport.logger.error("Error in getFrameInLabelBinary" + str(e)) 
@@ -180,22 +194,99 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             franja = franja/255
             # print(franja)
 
-            if (franja>100 and self.moneda):
-                print("se detecto un objeto")
-                self.num_monedas += 1
+            if (franja > 80 and self.moneda):
+                # print("se detecto un objeto")
+                self.total_monedas += 1
                 self.moneda = False
                 
-            if(franja<10):
+            if(franja < 10):
                 self.moneda = True
             
-            print(self.moneda)
-            total = str(self.num_monedas)
+            # print(self.moneda)
+            total = str(self.total_monedas)
             self.lblTotalMoneda = tk.Label(self.master, text="Total monedas: "+ total, fg="#000000")
             self.lblTotalMoneda['font'] = self.fontText # Toma la propiedad del texto 
             self.lblTotalMoneda.place(x=720, y=130) # Ubico el texto
         
         except Exception as e:
             self.logReport.logger.error("Error in totalMonedas" + str(e)) 
+
+    def identificarMonedas(self):
+        try: 
+            B1000 = True
+            B500 = True
+            B200 = True
+            B100 = True
+            B50 = True
+
+
+            contours, hie = cv2.findContours(self.frameBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            frameContours = self.frame.copy()
+            
+            if (len(contours) > 0):
+                for cnt in contours:
+                    x,y,w,h = cv2.boundingRect(cnt) 
+                    area = cv2.contourArea(cnt)
+                    if (area > 500):
+                        rect = cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+                        p = cv2.arcLength(cnt, True)
+                        c = 4*np.pi*area/(p*p)
+                        
+                        if (c > 0.8):
+                            cv2.drawContours(frameContours, cnt, -1, (255, 0, 0), 2)
+                            print("Área:", area)
+                            #cv2.imshow('frameContours', rect)
+                            # cv2.waitKey(5)
+
+                            # Monedas de 1000  
+                            if(area > 9000 and area < 10000 and B1000):
+                                self.moneda_1000 += 1
+                                self.actualizarContadoresGUI()
+                                B1000 = False
+                            elif(area < 9000):
+                                B1000 = True
+                            print("Monedas de Mil:", self.moneda_1000)
+                            
+                            if(area > 7500 and area < 8000 and B500):
+                                self.moneda_500 += 1
+                                self.actualizarContadoresGUI()
+                                B500 = False
+                            elif(area < 7500):
+                                B500 = True
+                            print("Monedas de 500:", self.moneda_500)
+                            
+                            if((area > 6865 and area < 6880 and B200) | (area > 6400 and area < 6430 and B200)):
+                                self.moneda_200 += 1
+                                self.actualizarContadoresGUI()
+                                B200 = False
+                            elif(area < 6865):
+                                B200 = True
+                            print("Monedas de 200:", self.moneda_200)
+                            if((area > 6990 and area < 7000 and B100) | (area > 6970 and area < 6975 and B100)):
+                                self.moneda_100 += 1
+                                self.actualizarContadoresGUI()
+                                B100 = False
+                            elif(area < 6990):
+                                B100 = True
+                            print("Monedas de 100:", self.moneda_100)
+                            if(area > 3500 and area < 4000 and B50):
+                                self.moneda_50 += 1
+                                self.actualizarContadoresGUI()
+                                B50 = False
+                            elif(area < 3500):
+                                B50 = True
+                            print("Monedas de 50:", self.moneda_50)   
+
+        except Exception as e:
+            self.logReport.logger.error("Error in identificarMonedas" + str(e))  
+            
+    def actualizarContadoresGUI(self):
+        self.lblMoneda50.config(text="Monedas de 50: " + str(self.moneda_50))
+        self.lblMoneda100.config(text="Monedas de 100: " + str(self.moneda_100))
+        self.lblMoneda200.config(text="Monedas de 200: " + str(self.moneda_200))
+        self.lblMoneda500.config(text="Monedas de 500: " + str(self.moneda_500))
+        self.lblMoneda1000.config(text="Monedas de 1000: " + str(self.moneda_1000))
+                  
 
 def main():
     root = tk.Tk() # Crear una instancia de tkinter -> todo lo que yo defina se va a quedar dentro de la raiz 
