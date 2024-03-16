@@ -12,6 +12,9 @@ import numpy as np
 import reportlog
 import runCamera
 import time
+from Motor import MotorController
+
+
 
 class Application(ttk.Frame): # Se le da estructura de un frame
     def __init__(self,master=None):
@@ -20,7 +23,9 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.logReport = reportlog.ReportLog()
             # pathCamUsb = 0
             # captureCamUsb = cv2.VideoCapture(pathCamUsb, cv2.CAP_DSHOW)
-            self.camera = runCamera.RunCamera(src="video/video1.mp4", name="video_1") 
+            self.camera = runCamera.RunCamera(src="video/video1.mp4", name="video_1")
+            self.motor_controller = MotorController(host='192.168.53.209', port=502)  # Usa la IP y puerto de tu ESP32
+            self.motor_controller.connect()
 
             self.master = master
             self.width = 1080
@@ -37,6 +42,8 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.moneda_100 = 0
             self.moneda_200 = 0
             self.moneda_50 = 0
+
+            self.time_1000 = 0
 
             self.createWidgets()
             self.createFrameZeros()
@@ -132,12 +139,12 @@ class Application(ttk.Frame): # Se le da estructura de un frame
         self.camera.start()
         self.getFrameInLabel()
         self.getFrameInLabelBinary()
-        #self.num_monedas = 0 
-        #self.moneda_1000 = 0
-        #self.moneda_500 = 0
-        #self.moneda_100 = 0
-        #self.moneda_200 = 0
-        #self.moneda_50 = 0
+        self.num_monedas = 0 
+        self.moneda_1000 = 0
+        self.moneda_500 = 0
+        self.moneda_100 = 0
+        self.moneda_200 = 0
+        self.moneda_50 = 0
         # print("init")
 
     def stopCameraProcess(self):
@@ -186,6 +193,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
     def exit(self):
         respuesta = messagebox.askyesno("Confirmar salida", "¿Está seguro de que desea salir?")
         if respuesta:
+            self.motor_controller.close()
             self.master.destroy()
     
     def totalMonedas(self):
@@ -218,6 +226,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             B200 = True
             B100 = True
             B50 = True
+            scape = True
 
 
             contours, hie = cv2.findContours(self.frameBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -239,10 +248,13 @@ class Application(ttk.Frame): # Se le da estructura de un frame
                             # cv2.waitKey(5)
 
                             # Monedas de 1000  
-                            if(area > 9000 and area < 10000 and B1000):
-                                self.moneda_1000 += 1
-                                self.actualizarContadoresGUI()
-                                B1000 = False
+                            if(9000 < area < 10000 and B1000):
+                                tiempo_actual = time.time()
+                                if (tiempo_actual - self.time_1000) > 100:
+                                    self.moneda_1000 += 1
+                                    self.actualizarContadoresGUI()
+                                    self.motor_controller.rotate_servo(90)
+                                    B1000 = False
                             elif(area < 9000):
                                 B1000 = True
                             print("Monedas de Mil:", self.moneda_1000)

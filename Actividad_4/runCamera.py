@@ -2,6 +2,7 @@ import reportlog
 import cv2
 import threading # Librería para subprocesos 
 
+
 class RunCamera():
     def __init__(self, src=0, name="CameraThread"):
         try:
@@ -48,4 +49,6 @@ class RunCamera():
             self.running = False
         except Exception as e:
             self.logReport.logger.error("Error runCamera stop " + str(e))
+
+
             
