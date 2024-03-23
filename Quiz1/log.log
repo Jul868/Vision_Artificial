@@ -10,3 +10,6 @@ INFO:root:Init main
 INFO:root:Init LoadImage process
 INFO:root:GUI created
 INFO:root:Error in get image color 'NoneType' object has no attribute 'any'
+INFO:root:Init main
+INFO:root:Init LoadImage process
+INFO:root:GUI created
