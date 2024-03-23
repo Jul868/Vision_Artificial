@@ -23,3 +23,12 @@ INFO:root:Init runCamera process
 INFO:root:Init main
 INFO:root:Init runCamera process
 ERROR:root:GUI no created[WinError 10060] Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+INFO:root:Init App
+ERROR:root:Error in class App name 'clicked' is not defined
+INFO:root:Init App
+INFO:root:Button Clicked
+INFO:root:Init App
+INFO:root:Button Clicked
+INFO:root:Init LoadImage process
+INFO:root:Init App
+ERROR:root:Error in class App 'LoadImage' object has no attribute 'frame'

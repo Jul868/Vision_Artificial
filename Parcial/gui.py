@@ -12,7 +12,6 @@ import cv2
 import numpy as np
 import reportlog
 import runCamera
-#from Motor import MotorController
 import time
 
 class Application(ttk.Frame): # Se le da estructura de un frame
@@ -35,6 +34,14 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.moneda = True
             self.bandera = True
             self.array = np.array([1,1])
+            
+            self.x1 = -1
+            self.y1 = -1
+            self.x2 = -1
+            self.y2 = -1
+            
+            self.band1 = False
+            self.band2 = True
 
             self.moneda_1000 = 0
             self.moneda_500 = 0
@@ -44,8 +51,6 @@ class Application(ttk.Frame): # Se le da estructura de un frame
 
             self.createWidgets()
             self.createFrameZeros()
-            #self.motor_controller = MotorController(host='192.168.53.209', port=502)  # Usa la IP y puerto de tu ESP32
-            #self.motor_controller.connect()
             self.logReport.logger.info("GUI created")
             self.master.mainloop()
 
@@ -138,6 +143,19 @@ class Application(ttk.Frame): # Se le da estructura de un frame
                                        width=12,
                                        command=self.exit)
         self.btnStopCamera.place(x=20, y=350)
+        
+        self.sliderL = Scale(self.master, from_=0, to=256, orient=tk.HORIZONTAL, length=100, label="Limite Inferior", command=self.slider_callback)
+        self.sliderL.place(x=350, y=300)
+        self.sliderL.set(15)
+
+        self.sliderR = Scale(self.master, from_=0, to=256, orient=tk.HORIZONTAL, length=100, label="Limite Superior", command=self.slider_callback)
+        self.sliderR.place(x=350, y=350)
+        self.sliderR.set(255)
+        
+    def slider_callback(self, value):
+        print('value: ', value)
+        print("Slider L:", self.sliderL.get())
+        print("Slider R:", self.sliderR.get())
 
     def initCameraProcess(self):
         self.camera.start()
@@ -154,6 +172,12 @@ class Application(ttk.Frame): # Se le da estructura de un frame
     def stopCameraProcess(self):
         self.camera.stop()
         print("stop")
+        
+    def exit(self):
+        respuesta = messagebox.askyesno("Confirmar salida", "¿Está seguro de que desea salir?")
+        if respuesta:
+
+            self.master.destroy()
 
     def getFrameInLabel(self):
         try:
@@ -176,32 +200,56 @@ class Application(ttk.Frame): # Se le da estructura de un frame
     def getFrameInLabelBinary(self):
         try:
             if (self.camera.grabbed):
-                frameCamera = self.camera.frame 
-                frame = cv2.resize(frameCamera, (320,240))
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                frameHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                self.frameBinary = cv2.inRange(frameHSV, (0, 0, 140), (229, 255, 255))
-                imgArray2 = Image.fromarray(self.frameBinary)  
+                self.camera.getFrameBinary((0, 0, self.sliderL.get()), (229, 255, self.sliderR.get()))
+                frameCamera = self.camera.frameBinary
+                self.frame2 = cv2.resize(frameCamera, (320,240))
+                imgArray2 = Image.fromarray(self.frame2)  
                 imgTk2 = ImageTk.PhotoImage(image=imgArray2) 
                 self.lblVideoBinary.configure(image = imgTk2)
                 self.lblVideoBinary.image = imgTk2
+                self.lblVideoBinary.bind("<Button-1>", self.event_click2)
 
                 self.totalMonedas()
                 self.identificarMonedas()
                 self.lblVideoBinary.after(90, self.getFrameInLabelBinary)
 
         except Exception as e:
-            self.logReport.logger.error("Error in getFrameInLabelBinary" + str(e)) 
+            self.logReport.logger.error("Error in getFrameInLabelBinary" + str(e))
+            
+    def event_click2(self, event):
+        if(self.band1 == False):
+            self.x1 = event.x
+            self.y1 = event.y
+            self.band1 = True
+            self.band2 = False
+            print("Label clicked at x1={}, y1={}".format(self.x1, self.y1))
+        elif(self.band2 == False):
+            self.x2 = event.x
+            self.y2 = event.y
+            self.band2 = True
+            self.band1 = False
+            print("Label clicked at x2={}, y2={}".format(self.x2, self.y2))
+            self.camera.getimgROI(self.x1, self.y1, self.x2, self.y2, 1)
+            self.getFrameROI()
+            
+    def getFrameROI(self):
+        try:
+            if (self.camera.grabbed):
+                frameROI = self.camera.imgROI
+                self.frame3 = cv2.resize(frameROI, (320,240))
+                self.frame3 = cv2.cvtColor(self.frame3, cv2.COLOR_BGR2RGB) 
+                imgArray3 = Image.fromarray(self.frame3)  
+                imgTk3 = ImageTk.PhotoImage(image=imgArray3) 
+                self.lbl3.configure(image=imgTk3)  # Configura la imagen en el Label
+                self.lbl3.image = imgTk3  # Actualiza la referencia a la imagen para evitar que Python la elimine de la memoria
 
-        
-    def exit(self):
-        respuesta = messagebox.askyesno("Confirmar salida", "¿Está seguro de que desea salir?")
-        if respuesta:
-            #self.motor_controller.close()
-            self.master.destroy()
+        except Exception as e:
+            self.logReport.logger.error("Error in getFrameROI" + str(e))
+
     
     def totalMonedas(self):
-        try: 
+        try:
+            self.frameBinary = self.camera.frameBinary
             franja = np.sum(self.frameBinary[:,159])
             franja = franja/255
             # print(franja)
@@ -247,38 +295,36 @@ class Application(ttk.Frame): # Se le da estructura de un frame
                 print("el maximo de pixeles es", maximo_pixeles)
 
                 # Monedas 1000
-                if maximo_pixeles>6000 and maximo_pixeles<8000:
+                if maximo_pixeles>28000 and maximo_pixeles<32000:
                     self.moneda_1000 = self.moneda_1000+1
                     self.actualizarContadoresGUI()
-                    #self.motor_controller.rotate_servo(36)
                     print("se detecto una moneda de 1000", self.moneda_1000)
 
                 # Monedas 500
                 if maximo_pixeles>5000 and maximo_pixeles<6000:
                     self.moneda_500 = self.moneda_500+1
                     self.actualizarContadoresGUI()
-                    #self.motor_controller.rotate_servo(72)
+
                     print("se detecto una moneda de 500", self.moneda_500)
 
                 # Monedas 200
                 if maximo_pixeles>4200 and maximo_pixeles<5000:
                     self.moneda_200 = self.moneda_200+1
                     self.actualizarContadoresGUI()
-                    #self.motor_controller.rotate_servo(108)
+
                     print("se detecto una moneda de 200", self.moneda_200)
 
                 # Monedas 100
                 if maximo_pixeles>3500 and maximo_pixeles<4200:
                     self.moneda_100 = self.moneda_100+1
                     self.actualizarContadoresGUI()
-                    #self.motor_controller.rotate_servo(144)
+
                     print("se detecto una moneda de 100", self.moneda_100)
 
                 # Monedas 50 
                 if maximo_pixeles>100 and maximo_pixeles<3500:
                     self.moneda_50 = self.moneda_50+1
                     self.actualizarContadoresGUI()
-                    #self.motor_controller.rotate_servo(180)
                     print("se detecto una moneda de 50", self.moneda_50)
 
                 self.array=np.array([1,1])

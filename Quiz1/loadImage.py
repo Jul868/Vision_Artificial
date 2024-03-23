@@ -37,3 +37,11 @@ class LoadImage():
         h, w = imgROI.shape[:2]
         self.imgROI = cv2.resize(imgROI, (w*scale,h*scale))
         cv2.imshow('imgROI: ', self.imgROI)
+        
+    def filterImage(self, kernel):
+        self.imgBinaryIr = cv2.filter2D(self.imgBinaryIr, -1, kernel)
+        self.imgBinaryIrColor = cv2.cvtColor(self.imgBinaryIr, cv2.COLOR_GRAY2BGR)
+    
+    def dilateImage(self, kernel):
+        self.imgBinaryIr = cv2.dilate(self.imgBinaryIr, kernel, iterations=1)
+        self.imgBinaryIrColor = cv2.cvtColor(self.imgBinaryIr, cv2.COLOR_GRAY2BGR)
