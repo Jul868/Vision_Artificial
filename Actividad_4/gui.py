@@ -1,4 +1,5 @@
 # Graphic user interface (gui)
+# Graphic user interface (gui)
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
@@ -11,21 +12,17 @@ import cv2
 import numpy as np
 import reportlog
 import runCamera
+#from Motor import MotorController
 import time
-from Motor import MotorController
-
-
 
 class Application(ttk.Frame): # Se le da estructura de un frame
     def __init__(self,master=None):
         try:
             super().__init__(master)
             self.logReport = reportlog.ReportLog()
-            # pathCamUsb = 0
-            # captureCamUsb = cv2.VideoCapture(pathCamUsb, cv2.CAP_DSHOW)
+            
+            #self.camera = runCamera.RunCamera(0)
             self.camera = runCamera.RunCamera(src="video/video1.mp4", name="video_1")
-            self.motor_controller = MotorController(host='192.168.53.209', port=502)  # Usa la IP y puerto de tu ESP32
-            self.motor_controller.connect()
 
             self.master = master
             self.width = 1080
@@ -36,6 +33,8 @@ class Application(ttk.Frame): # Se le da estructura de un frame
 
             self.total_monedas = 0
             self.moneda = True
+            self.bandera = True
+            self.array = np.array([1,1])
 
             self.moneda_1000 = 0
             self.moneda_500 = 0
@@ -43,10 +42,10 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.moneda_200 = 0
             self.moneda_50 = 0
 
-            self.time_1000 = 0
-
             self.createWidgets()
             self.createFrameZeros()
+            #self.motor_controller = MotorController(host='192.168.53.209', port=502)  # Usa la IP y puerto de tu ESP32
+            #self.motor_controller.connect()
             self.logReport.logger.info("GUI created")
             self.master.mainloop()
 
@@ -83,7 +82,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
 
         # Monedas 50 
         moneda50 = str(self.moneda_50)
-        self.lblMoneda50 = tk.Label(self.master, text="Monedas de 50: "+ str(moneda50), fg="#000000")
+        self.lblMoneda50 = tk.Label(self.master, text="Monedas de 50: "+ moneda50, fg="#000000")
         self.lblMoneda50['font'] = self.fontText # Toma la propiedad del texto 
         self.lblMoneda50.place(x=720, y=30) # Ubico el texto 
 
@@ -176,7 +175,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
                 frame = cv2.resize(frameCamera, (320,240))
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frameHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                self.frameBinary = cv2.inRange(frameHSV, (0, 0, 16), (255, 150, 255))
+                self.frameBinary = cv2.inRange(frameHSV, (0, 0, 140), (229, 255, 255))
                 imgArray2 = Image.fromarray(self.frameBinary)  
                 imgTk2 = ImageTk.PhotoImage(image=imgArray2) 
                 self.lblVideoBinary.configure(image = imgTk2)
@@ -193,7 +192,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
     def exit(self):
         respuesta = messagebox.askyesno("Confirmar salida", "¿Está seguro de que desea salir?")
         if respuesta:
-            self.motor_controller.close()
+            #self.motor_controller.close()
             self.master.destroy()
     
     def totalMonedas(self):
@@ -202,7 +201,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             franja = franja/255
             # print(franja)
 
-            if (franja > 80 and self.moneda):
+            if (franja > 10 and self.moneda):
                 # print("se detecto un objeto")
                 self.total_monedas += 1
                 self.moneda = False
@@ -221,73 +220,64 @@ class Application(ttk.Frame): # Se le da estructura de un frame
 
     def identificarMonedas(self):
         try: 
-            B1000 = True
-            B500 = True
-            B200 = True
-            B100 = True
-            B50 = True
-            scape = True
+            franja = np.sum(self.frameBinary[:,0:320])
+            franja = franja/255
 
+            # Encontrar los contornos en la imagen binaria
+            contours, _ = cv2.findContours(self.frameBinary.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            contours, hie = cv2.findContours(self.frameBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-            frameContours = self.frame.copy()
+            if len(contours) > 0:
+                for contour in contours:
+                    area = cv2.contourArea(contour)
+                    self.array=np.append(self.array,area)
+            else:
+                area = 0
             
-            if (len(contours) > 0):
-                for cnt in contours:
-                    x,y,w,h = cv2.boundingRect(cnt) 
-                    area = cv2.contourArea(cnt)
-                    if (area > 500):
-                        rect = cv2.rectangle(self.frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-                        p = cv2.arcLength(cnt, True)
-                        c = 4*np.pi*area/(p*p)
-                        
-                        if (c > 0.8):
-                            cv2.drawContours(frameContours, cnt, -1, (255, 0, 0), 2)
-                            print("Área:", area)
-                            #cv2.imshow('frameContours', rect)
-                            # cv2.waitKey(5)
+            if (franja>1000 and self.bandera):
+                print("se detecto un objeto")
+                self.bandera=False
+            
+            elif (franja<1000 and not self.bandera):
+                maximo_pixeles = np.max(self.array)
+                print("el maximo de pixeles es", maximo_pixeles)
 
-                            # Monedas de 1000  
-                            if(9000 < area < 10000 and B1000):
-                                tiempo_actual = time.time()
-                                if (tiempo_actual - self.time_1000) > 100:
-                                    self.moneda_1000 += 1
-                                    self.actualizarContadoresGUI()
-                                    self.motor_controller.rotate_servo(90)
-                                    B1000 = False
-                            elif(area < 9000):
-                                B1000 = True
-                            print("Monedas de Mil:", self.moneda_1000)
-                            
-                            if(area > 7500 and area < 8000 and B500):
-                                self.moneda_500 += 1
-                                self.actualizarContadoresGUI()
-                                B500 = False
-                            elif(area < 7500):
-                                B500 = True
-                            print("Monedas de 500:", self.moneda_500)
-                            
-                            if((area > 6865 and area < 6880 and B200) | (area > 6400 and area < 6430 and B200)):
-                                self.moneda_200 += 1
-                                self.actualizarContadoresGUI()
-                                B200 = False
-                            elif(area < 6865):
-                                B200 = True
-                            print("Monedas de 200:", self.moneda_200)
-                            if((area > 6990 and area < 7000 and B100) | (area > 6970 and area < 6975 and B100)):
-                                self.moneda_100 += 1
-                                self.actualizarContadoresGUI()
-                                B100 = False
-                            elif(area < 6990):
-                                B100 = True
-                            print("Monedas de 100:", self.moneda_100)
-                            if(area > 3500 and area < 4000 and B50):
-                                self.moneda_50 += 1
-                                self.actualizarContadoresGUI()
-                                B50 = False
-                            elif(area < 3500):
-                                B50 = True
-                            print("Monedas de 50:", self.moneda_50)   
+                # Monedas 1000
+                if maximo_pixeles>6000 and maximo_pixeles<8000:
+                    self.moneda_1000 = self.moneda_1000+1
+                    self.actualizarContadoresGUI()
+                    #self.motor_controller.rotate_servo(36)
+                    print("se detecto una moneda de 1000", self.moneda_1000)
+
+                # Monedas 500
+                if maximo_pixeles>5000 and maximo_pixeles<6000:
+                    self.moneda_500 = self.moneda_500+1
+                    self.actualizarContadoresGUI()
+                    #self.motor_controller.rotate_servo(72)
+                    print("se detecto una moneda de 500", self.moneda_500)
+
+                # Monedas 200
+                if maximo_pixeles>4200 and maximo_pixeles<5000:
+                    self.moneda_200 = self.moneda_200+1
+                    self.actualizarContadoresGUI()
+                    #self.motor_controller.rotate_servo(108)
+                    print("se detecto una moneda de 200", self.moneda_200)
+
+                # Monedas 100
+                if maximo_pixeles>3500 and maximo_pixeles<4200:
+                    self.moneda_100 = self.moneda_100+1
+                    self.actualizarContadoresGUI()
+                    #self.motor_controller.rotate_servo(144)
+                    print("se detecto una moneda de 100", self.moneda_100)
+
+                # Monedas 50 
+                if maximo_pixeles>100 and maximo_pixeles<3500:
+                    self.moneda_50 = self.moneda_50+1
+                    self.actualizarContadoresGUI()
+                    #self.motor_controller.rotate_servo(180)
+                    print("se detecto una moneda de 50", self.moneda_50)
+
+                self.array=np.array([1,1])
+                self.bandera = True
 
         except Exception as e:
             self.logReport.logger.error("Error in identificarMonedas" + str(e))  
