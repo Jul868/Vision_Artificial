@@ -63,32 +63,36 @@ class RunCamera():
     
     def getimgROI(self,x1,y1,x2,y2, scale):
         self.frame3 = cv2.resize(self.frameBinary, (320,240))
-        imgROI = self.frame3[y1:y2, x1:x2]
-        h, w = imgROI.shape[:2]
-        self.imgROI = cv2.resize(imgROI, (w*scale,h*scale))
+        self.imgROI = self.frame3[y1:y2, x1:x2]
+        self.imgROIColor = self.frame[y1:y2, x1:x2]
         #cv2.imshow('imgROI: ', self.imgROI)
+        
+    def areaC(self, cnt):
+            # Encuentra el círculo mínimo que encierra el contorno
+            (x, y), radius = cv2.minEnclosingCircle(cnt)
+            # Calcula el área del círculo
+            area = np.pi * (radius ** 2)
+            return area
 
     def imgCont(self):
         try:
-            #print("imgCont")
-            self.contours, self.hie = cv2.findContours(self.imgROI, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-            self.imgBinRsize = cv2.resize(self.frame, (320,240))
+            mgRoi = cv2.resize(self.imgROI, (320, 240))
+            self.contours, self.hie = cv2.findContours(mgRoi, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+            self.imgBinRsize = cv2.resize(self.frame, (320, 240))
             self.imgContours = np.zeros(self.imgBinRsize.shape[:], dtype=np.uint8)
-            if (len(self.contours) > 0):
-                for cnt in self.contours:
-                    x,y,w,h = cv2.boundingRect(cnt)
-                    area = cv2.contourArea(cnt)
-                    if ( area > 100):
-                        cv2.rectangle(self.imgBinRsize, (x, y), (x+w, y+h), (255, 0, 0), 2)
-                        p = cv2.arcLength(cnt, True)
-                        c = 4*np.pi*area/(p*p)
-                        # area del circulo
-                        self.areaCirc = np.pi*(w/2)*(h/2)
-                        if (c > 0.1):
-                            cv2.drawContours(self.imgContours, cnt, -1, (255, 0, 0), 2)
-                            cv2.imshow('imgContours', self.imgContours)
+
+            if self.contours:
+                for idx, (cnt, hier) in enumerate(zip(self.contours, self.hie[0])):
+                    if hier[3] != -1 and hier[2] == -1:
+                        area = cv2.contourArea(cnt)
+                        if area > 100:
+                            # Dibujar solo contornos internos
+                            cv2.drawContours(self.imgContours, [cnt], -1, (255, 0, 0), 2)
+                            self.areaCirc = self.areaC(cnt)
+
         except Exception as e:
-            self.logReport.logger.error("Error imgContours " + str(e))
+            self.logReport.logger.error("Error in imgCont: " + str(e))
+
         
             
 
