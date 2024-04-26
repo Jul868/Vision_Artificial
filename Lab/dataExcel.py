@@ -36,6 +36,10 @@ for indice, num in enumerate (vectorNums): # Recorro el vector y lo voy ennumera
                 imgRoi = imgBinary[y:y+h, x:x+w]
                 imgRoiResize = cv2.resize(imgRoi, (40,60))
                 
+                # bp = cv2.countNonZero(imgRoiResize)
+                # m = cv2.moments(imgRoiResize)
+                # cx = m["m01"]/m["m00"] #coordenada x del centroide
+                # cy = m["m10"]/m["m00"] #coordenada y del centroide
                 if (areaHW > 1000):
                     # vectorCaract = imgRoiResize.flatten()
                     vectorCaract.append(area)
