@@ -42,9 +42,8 @@ if __name__ == '__main__':
     # Configuración del modelo (red neuronal) 
     # MLPClassifier -> Clasificador de redes neuronales
     modelMLP = MLPClassifier(hidden_layer_sizes=(80, 60, 20, 15), # Tamaño de las capas ocultas (20 neuronas en dos capas ocultas)
-                             max_iter=100, # Iteraciones (épocas de entrenamiento)
+                             max_iter=2000, # Iteraciones (épocas de entrenamiento)
                              activation='relu', # Función de activación
-                             solver='adam', # Algoritmo de optimización
                              alpha=0.0001, # Parámetro para controlar la regularización 
                              # learning_rate='adaptive', # Tasa de aprendizaje adaptativa
                              learning_rate_init=0.001, # Tasa de aprendizaje inicial
@@ -68,8 +67,8 @@ if __name__ == '__main__':
     # Evaluación del modelo 
     # accuracy = modelNDN.score(X_test, Y_test)
     accuracy = modelMLP.score(X_test, Y_test)
-    accuracy = accuracy * 100
-    print('accuracy: ', accuracy)
+    accuracy = round(accuracy*100, 3)
+    print(f"Accuracy: {accuracy} %")
 
     # joblib.dump(modelScaler, 'modelScaler.joblib')
     # joblib.dump(modelNDN, 'modelNDN.joblib')

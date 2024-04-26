@@ -1,0 +1,4 @@
+imagenes\cad
+train.csv
+0
+img
