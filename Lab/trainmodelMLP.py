@@ -42,24 +42,18 @@ if __name__ == '__main__':
     # Configuración del modelo (red neuronal) 
     # MLPClassifier -> Clasificador de redes neuronales
     modelMLP = MLPClassifier(hidden_layer_sizes=(80, 60, 20, 15), # Tamaño de las capas ocultas (20 neuronas en dos capas ocultas)
-                             max_iter=2000, # Iteraciones (épocas de entrenamiento)
+                             max_iter=4000, # Iteraciones (épocas de entrenamiento)
                              activation='relu', # Función de activación
                              alpha=0.0001, # Parámetro para controlar la regularización 
-                             # learning_rate='adaptive', # Tasa de aprendizaje adaptativa
-                             learning_rate_init=0.001, # Tasa de aprendizaje inicial
+                             learning_rate='adaptive', # Tasa de aprendizaje adaptativa
+                             learning_rate_init=0.0001, # Tasa de aprendizaje inicial
                              batch_size=32, # Tamaño del lote 
                              beta_1=0.9, # Parámetro para el algoritmo de optimización
                              beta_2=0.999, # Parámetro para el algoritmo de optimización
                              epsilon=1e-08, # Parámetro para el algoritmo de optimización
-                             n_iter_no_change=10, # Número de iteraciones sin mejora    
                              random_state=42) # Semilla aleatoria para reproducibilidad
-    
-    # Configuración del modelo (vecinos más cercanos)
-    # KNeighborsClassifier -> Clasificador de vecinos más cercanos
-    modelNDN = KNeighborsClassifier(algorithm='auto',
-                                     metric='manhattan',
-                                     n_neighbors=32,
-                                     weights='distance',) # Clasificador de vecinos más cercanos
+
+
     
     # modelNDN.fit(X_train, Y_train)
     modelMLP.fit(X_train, Y_train) # Entrenamimento del modelo 
@@ -70,6 +64,6 @@ if __name__ == '__main__':
     accuracy = round(accuracy*100, 3)
     print(f"Accuracy: {accuracy} %")
 
-    # joblib.dump(modelScaler, 'modelScaler.joblib')
+    joblib.dump(modelScaler, 'modelScaler.joblib')
     # joblib.dump(modelNDN, 'modelNDN.joblib')
     joblib.dump(modelMLP, 'modelMLP.joblib') # Guardar el modelo entrenado 
