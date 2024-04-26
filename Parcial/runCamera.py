@@ -63,8 +63,15 @@ class RunCamera():
     
     def getimgROI(self,x1,y1,x2,y2, scale):
         self.frame3 = cv2.resize(self.frameBinary, (320,240))
+<<<<<<< HEAD
+<<<<<<< HEAD
+        imgROI = self.frame3[y1:y2, x1:x2]
+        h, w = imgROI.shape[:2]
+        self.imgROI = cv2.resize(imgROI, (w*scale,h*scale))
+=======
         self.imgROI = self.frame3[y1:y2, x1:x2]
         self.imgROIColor = self.frame[y1:y2, x1:x2]
+>>>>>>> f634fc99a88e3a7d3f076479aa36bbad8d484730
         #cv2.imshow('imgROI: ', self.imgROI)
         
     def areaC(self, cnt):
@@ -91,8 +98,46 @@ class RunCamera():
                             self.areaCirc = self.areaC(cnt)
 
         except Exception as e:
+<<<<<<< HEAD
+            self.logReport.logger.error("Error imgContours " + str(e))
+=======
+        self.frame = cv2.resize(self.frame, (320,240))
+        self.imgROI = self.frame3[y1:y2, x1:x2]
+        self.imgROIColor = self.frame[y1:y2, x1:x2]
+        #cv2.imshow('imgROI: ', self.imgROI)
+        
+    def areaC(self, cnt):
+            # Encuentra el círculo mínimo que encierra el contorno
+            (x, y), radius = cv2.minEnclosingCircle(cnt)
+            # Calcula el área del círculo
+            area = np.pi * (radius ** 2)
+            return area
+
+    def imgCont(self):
+        try:
+            mgRoi = cv2.resize(self.imgROI, (320, 240))  # Asegúrate de que esta es la imagen binaria necesaria para encontrar contornos
+            self.contours, self.hie = cv2.findContours(mgRoi, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+            self.imgBinRsize = cv2.resize(self.imgROIColor, (320, 240))  # Asegúrate de que esta es la imagen a color escalada correctamente
+            self.imgContours = self.imgBinRsize.copy()  # Crear una copia de la imagen a color para dibujar los contornos
+
+            if self.contours:
+                for idx, (cnt, hier) in enumerate(zip(self.contours, self.hie[0])):
+                    if hier[3] != -1 and hier[2] == -1:  # Filtra solo contornos internos
+                        area = cv2.contourArea(cnt)
+                        if area > 100:
+                            # Dibujar solo contornos internos directamente sobre la imagen a color
+                            cv2.drawContours(self.imgContours, [cnt], -1, (255, 0, 0), 2)
+                            self.areaCirc = self.areaC(cnt)
+
+        except Exception as e:
             self.logReport.logger.error("Error in imgCont: " + str(e))
 
+
+>>>>>>> recovery
+=======
+            self.logReport.logger.error("Error in imgCont: " + str(e))
+
+>>>>>>> f634fc99a88e3a7d3f076479aa36bbad8d484730
         
             
 
