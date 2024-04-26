@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-path = 'imagenes/fig.png'
+path = 'Imagenes/fig.PNG'
 
 imgColor = cv2.imread(path, 1)
 imgGray = cv2.imread(path, 0)
