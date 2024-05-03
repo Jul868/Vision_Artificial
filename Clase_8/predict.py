@@ -35,8 +35,7 @@ for iP in imgPath:
             imgRoi = imgBin[y:y+h, x:x+w]
             imgRoiResize = cv2.resize(imgRoi, (40, 60))
             vectorCaract = imgRoiResize.flatten()
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()            
+                        
             # area = cv2.contourArea(cnt)
             # p = cv2.arcLength(cnt, True)
             # M = cv2.moments(cnt)
@@ -67,6 +66,8 @@ for iP in imgPath:
             elif(int(result[0]) == 9):
                 print("el número es: ", 9)
 
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
     print("Fin...")             
 
 

@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 
 import joblib
 
-workbook = xlrd.open_workbook('dataNumbers.xlsx')
+workbook = xlrd.open_workbook('dataLetters.xlsx')
 
 
 def load_workbook(file):
@@ -52,4 +52,4 @@ if __name__ == '__main__':
 
     joblib.dump(modelScaler, 'modelScaler.joblib')
     #joblib.dump(modelNDN, 'modelNDN3.joblib')
-    joblib.dump(modelMLP, 'modelMLP_I80.joblib')
+    joblib.dump(modelMLP, 'modelMLP.joblib')

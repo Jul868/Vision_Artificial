@@ -9,7 +9,7 @@ worksheet = workbook.add_worksheet()
 row = 0
 col = 1
 
-pathNumImages = 'num/'
+pathNumImages = 'Train/'
 vectorNums = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 vectorCount = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
@@ -34,7 +34,7 @@ for indice, num in  enumerate(vectorNums): #recorre el vector VectorNums y enume
                 imgRoi = imgBinary[y:y+h, x:x+w]
                 imgRoiResize = cv2.resize(imgRoi, (40, 60))
                 if (areaWH > 1000):
-                    vectorCaract = imgRoiResize.flatten()
+                    #vectorCaract = imgRoiResize.flatten()
                     
                     # vectorCaract.append(area)
                     # vectorCaract.append(p)

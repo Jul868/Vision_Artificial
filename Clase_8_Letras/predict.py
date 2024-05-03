@@ -5,10 +5,10 @@ import joblib
 
 
 
-mlp = joblib.load('modelMLP2.joblib') # Carga del modelo. 
+mlp = joblib.load('modelMLP.joblib') # Carga del modelo. 
 skl = joblib.load('modelScaler.joblib') # Carga del modelo.
 print("Modelo cargado...", mlp)
-pathNum = 'num/test/'
+pathNum = 'Test/'
 imgPath = glob(pathNum +'*.jpg')
 print("imgPath: ", imgPath)
 for iP in imgPath:
@@ -35,8 +35,7 @@ for iP in imgPath:
             imgRoi = imgBin[y:y+h, x:x+w]
             imgRoiResize = cv2.resize(imgRoi, (40, 60))
             vectorCaract = imgRoiResize.flatten()
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()            
+                        
             # area = cv2.contourArea(cnt)
             # p = cv2.arcLength(cnt, True)
             # M = cv2.moments(cnt)
@@ -46,27 +45,61 @@ for iP in imgPath:
             vectorSKL = skl.transform(vectorReshape)
             result = mlp.predict(vectorSKL)
             print("result: ", result)
-            if(int(result[0]) == 0):
-                print("el número es: ", 0)
-            elif(int(result[0]) == 1): 
-                print("el número es: ", 1)
-            elif(int(result[0]) == 2):
-                print("el número es: ", 2)
-            elif(int(result[0]) == 3):
-                print("el número es: ", 3)
-            elif(int(result[0]) == 4):
-                print("el número es: ", 4)
-            elif(int(result[0]) == 5):
-                print("el número es: ", 5)
-            elif(int(result[0]) == 6):
-                print("el número es: ", 6)
-            elif(int(result[0]) == 7):
-                print("el número es: ", 7)
-            elif(int(result[0]) == 8):
-                print("el número es: ", 8)
-            elif(int(result[0]) == 9):
-                print("el número es: ", 9)
-
+            if(result == 1):
+                print("Letra: A")
+            elif(result == 2):
+                print("Letra: B")
+            elif(result == 3):
+                print("Letra: C")
+            elif(result == 4):
+                print("Letra: D")
+            elif(result == 5):
+                print("Letra: E")
+            elif(result == 6):
+                print("Letra: F")
+            elif(result == 7):
+                print("Letra: G")
+            elif(result == 8):
+                print("Letra: H")
+            elif(result == 9):
+                print("Letra: I")
+            elif(result == 10):
+                print("Letra: J")
+            elif(result == 11):
+                print("Letra: K")
+            elif(result == 12):
+                print("Letra: L")
+            elif(result == 13):
+                print("Letra: M")
+            elif(result == 14):
+                print("Letra: N")
+            elif(result == 15):
+                print("Letra: O")
+            elif(result == 16):
+                print("Letra: P")
+            elif(result == 17):
+                print("Letra: Q")
+            elif(result == 18):
+                print("Letra: R")
+            elif(result == 19):
+                print("Letra: S")
+            elif(result == 20):
+                print("Letra: T")
+            elif(result == 21):
+                print("Letra: U")
+            elif(result == 22):
+                print("Letra: V")
+            elif(result == 23):
+                print("Letra: W")
+            elif(result == 24):
+                print("Letra: X")
+            elif(result == 25):
+                print("Letra: Y")
+            elif(result == 26):
+                print("Letra: Z")
+                
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()   
     print("Fin...")             
 
 

@@ -40,8 +40,9 @@ if __name__ == '__main__':
         80, 75, 60), max_iter=2000, activation='relu',learning_rate_init=0.001, alpha=0.0001, random_state=42,)#relu o logistic o tanh o identity o softmax
     modelMLP.fit(X_train, Y_train)
 
-    #modelNDN = KNeighborsClassifier(algorithm='auto', metric='manhattan',n_neighbors= 32, weights= 'distance' )# algorithm='auto' or 'ball_tree' or 'kd_tree' or 'brute', metric='euclidean' or 'manhattan' or 'chebyshev' or 'minkowski' or 'wminkowski' or 'seuclidean' or 'mahalanobis', n_neighbors= 32, weights= 'distance' or 'uniform'
-    #modelNDN.fit(X_train, Y_train)
+    # modelMLP = MLPClassifier(hidden_layer_sizes=(
+    #     80, 65, 62), max_iter=2000, activation='tanh',learning_rate_init=0.0001, alpha=0.0001, random_state=42,)#relu o logistic o tanh o identity o softmax
+    # modelMLP.fit(X_train, Y_train)
 
     #accuracy = modelNDN.score(X_test, Y_test)
     accuracy = modelMLP.score(X_test, Y_test)
@@ -52,4 +53,4 @@ if __name__ == '__main__':
 
     joblib.dump(modelScaler, 'modelScaler.joblib')
     #joblib.dump(modelNDN, 'modelNDN3.joblib')
-    joblib.dump(modelMLP, 'modelMLP_I80.joblib')
+    joblib.dump(modelMLP, 'modelMLP_IFlat.joblib')
