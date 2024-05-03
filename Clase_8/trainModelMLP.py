@@ -52,4 +52,4 @@ if __name__ == '__main__':
 
     joblib.dump(modelScaler, 'modelScaler.joblib')
     #joblib.dump(modelNDN, 'modelNDN3.joblib')
-    joblib.dump(modelMLP, 'modelMLP2.joblib')
+    joblib.dump(modelMLP, 'modelMLP_I80.joblib')

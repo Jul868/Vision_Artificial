@@ -5,7 +5,7 @@ import joblib
 
 
 
-mlp = joblib.load('modelMLP2.joblib') # Carga del modelo.
+mlp = joblib.load('modelMLP2.joblib') # Carga del modelo. 
 skl = joblib.load('modelScaler.joblib') # Carga del modelo.
 print("Modelo cargado...", mlp)
 pathNum = 'num/test/'
