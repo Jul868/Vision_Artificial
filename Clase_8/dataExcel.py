@@ -11,7 +11,6 @@ col = 1
 
 pathNumImages = 'num/'
 vectorNums = ['0','1','2','3','4','5','6','7','8','9']
-vectorCount = [0,0,0,0,0,0,0,0,0,0]
 
 for indice, num in  enumerate(vectorNums): #recorre el vector VectorNums y enumera devolviendo el indice y el valor
     pathNum =pathNumImages + num #concatena el pathNumImages con el valor de num para obtener la ruta de la carpeta de las imagenes
@@ -20,7 +19,8 @@ for indice, num in  enumerate(vectorNums): #recorre el vector VectorNums y enume
         
         imgColor = cv2.imread(pathImg)
         imgGray = cv2.imread(pathImg, 0)
-        ret, imgBinary = cv2.threshold(imgGray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU) 
+        imgGray = cv2.resize(imgGray, (27, 58))
+        ret, imgBinary = cv2.threshold(imgGray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         cnts, hier = cv2.findContours(imgBinary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         if len(cnts) > 0:
             vectorCaract = []

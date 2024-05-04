@@ -34,10 +34,10 @@ if __name__ == '__main__':
     Xscaled = modelScaler.transform(X)
 
     X_train, X_test, Y_train, Y_test = train_test_split(
-        X, Y, test_size=0.15, random_state=42)
+        X, Y, test_size=0.25, random_state=42)
 
     modelMLP = MLPClassifier(hidden_layer_sizes=(
-        80, 75, 60), max_iter=2000, activation='relu',learning_rate_init=0.001, alpha=0.0001, random_state=42,)#relu o logistic o tanh o identity o softmax
+        75, 95), max_iter=4000, activation='logistic',learning_rate_init=0.0001, alpha=0.0001, random_state=42)#relu o logistic o tanh o identity o softmax
     modelMLP.fit(X_train, Y_train)
 
     #modelNDN = KNeighborsClassifier(algorithm='auto', metric='manhattan',n_neighbors= 32, weights= 'distance' )# algorithm='auto' or 'ball_tree' or 'kd_tree' or 'brute', metric='euclidean' or 'manhattan' or 'chebyshev' or 'minkowski' or 'wminkowski' or 'seuclidean' or 'mahalanobis', n_neighbors= 32, weights= 'distance' or 'uniform'

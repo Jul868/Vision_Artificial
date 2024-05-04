@@ -4,10 +4,10 @@ from glob import glob
 import joblib
 
 
-mlpNum = joblib.load('ModelNum.joblib') # Carga del modelo. 
+mlpNum = joblib.load('ModelNum2.joblib') # Carga del modelo. 
 sklNum = joblib.load('ScalerNum.joblib') # Carga del modelo.
-# mlpLet = joblib.load('ModelLet.joblib') # Carga del modelo.
-# sklLet = joblib.load('ScalerLet.joblib') # Carga del modelo.
+mlpLet = joblib.load('ModelLet.joblib') # Carga del modelo.
+sklLet = joblib.load('ScalerLet.joblib') # Carga del modelo.
 
 print("Modelo cargado...", mlpNum)
 pathNum = 'Placas/'
@@ -17,6 +17,7 @@ print("imgPath: ", imgPath)
 cadenaNum = []
 cadenaLet = []
 CadenaFull = []
+resultLet = ''
 
 for iP in imgPath:
     cadenaNum = []
@@ -49,8 +50,7 @@ for iP in imgPath:
 
 
                 vectorCaract = imgRoiResize.flatten()
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()            
+            
                 # area = cv2.contourArea(cnt)
                 # p = cv2.arcLength(cnt, True)
                 # M = cv2.moments(cnt)
@@ -69,18 +69,98 @@ for iP in imgPath:
                         print("Placa: ", cadenaNum)
                 else:
                     vectorReshape = vectorCaract.reshape(1, -1)
-                    # vectorSKL = sklLet.transform(vectorReshape)
-                    # result = mlpLet.predict(vectorSKL)
-                    cadenaLet = np.append(cadenaLet, result)
-                    print("result: ", result)
+                    vectorSKL = sklLet.transform(vectorReshape)
+                    result = mlpLet.predict(vectorSKL)
+                    # print("result: ", result)
                     print("---------------------")
+                    if(result == 0):
+                        resultLet = 'A'
+                        print("result: ", resultLet)
+                    elif(result == 1):
+                        resultLet = 'B'
+                        print("result: ", resultLet)
+                    elif(result == 2):
+                        resultLet = 'C'
+                        print("result: ", resultLet)
+                    elif(result == 3):
+                        resultLet = 'D'
+                        print("result: ", resultLet)
+                    elif(result == 4):
+                        resultLet = 'E'
+                        print("result: ", resultLet)
+                    elif(result == 5):
+                        resultLet = 'F'
+                        print("result: ", resultLet)
+                    elif(result == 6):
+                        resultLet = 'G'
+                        print("result: ", resultLet)
+                    elif(result == 7):
+                        resultLet = 'H'
+                        print("result: ", resultLet)
+                    elif(result == 8):
+                        resultLet = 'I'
+                        print("result: ", resultLet)
+                    elif(result == 9):
+                        resultLet = 'J'
+                        print("result: ", resultLet)
+                    elif(result == 10):
+                        resultLet = 'K'
+                        print("result: ", resultLet)
+                    elif(result == 11):
+                        resultLet = 'L'
+                        print("result: ", resultLet)
+                    elif(result == 12):
+                        resultLet = 'M'
+                        print("result: ", resultLet)
+                    elif(result == 13):
+                        resultLet = 'N'
+                        print("result: ", resultLet)
+                    elif(result == 14):
+                        resultLet = 'O'
+                        print("result: ", resultLet)
+                    elif(result == 15):
+                        resultLet = 'P'
+                        print("result: ", resultLet)
+                    elif(result == 16):
+                        resultLet = 'Q'
+                        print("result: ", resultLet)
+                    elif(result == 17):
+                        resultLet = 'R'
+                        print("result: ", resultLet)
+                    elif(result == 18):
+                        resultLet = 'S'
+                        print("result: ", resultLet)
+                    elif(result == 19):
+                        resultLet = 'T'
+                        print("result: ", resultLet)
+                    elif(result == 20):
+                        resultLet = 'U'
+                        print("result: ", resultLet)
+                    elif(result == 21):
+                        resultLet = 'V'
+                        print("result: ", resultLet)
+                    elif(result == 22):
+                        resultLet = 'W'
+                        print("result: ", resultLet)
+                    elif(result == 23):
+                        resultLet = 'X'
+                        print("result: ", resultLet)
+                    elif(result == 24):
+                        resultLet = 'Y'
+                        print("result: ", resultLet)
+                    elif(result == 25):
+                        resultLet = 'Z'
+                        print("result: ", resultLet)
+                        
+                    cadenaLet = np.append(cadenaLet, resultLet)
                     if len(cadenaLet) == 3:
                         #vamos a inverir el orden de la cadena
                         cadenaLet = cadenaLet[::-1]
                         print("Placa: ", cadenaLet)
-                        
+
 
     print("Fin...")             
     print("Placa: ", cadenaLet, cadenaNum)
-
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
             
