@@ -14,7 +14,7 @@ import joblib # Herramienta para guardar y cargar modelos entrenados
 
 workbook = xlrd.open_workbook('dataNumbers.xlsx') # Abrir libro de excel con los datos
 
-# Función para cargar los datos del archivo de excek
+# Función para cargar los datos del archivo de excel
 def load_workbook(file):
     sheet = file.sheet_by_index(0)
     x = np.zeros((sheet.nrows, sheet.ncols-1)) # sheet.nols-1 -> le quito la columna de la clase
@@ -41,29 +41,14 @@ if __name__ == '__main__':
 
     # Configuración del modelo (red neuronal) 
     # MLPClassifier -> Clasificador de redes neuronales
-    modelMLP = MLPClassifier(hidden_layer_sizes=(80, 60, 20, 15), # Tamaño de las capas ocultas (20 neuronas en dos capas ocultas)
-                             max_iter=4000, # Iteraciones (épocas de entrenamiento)
-                             activation='relu', # Función de activación
-                             alpha=0.0001, # Parámetro para controlar la regularización 
-                             learning_rate='adaptive', # Tasa de aprendizaje adaptativa
-                             learning_rate_init=0.0001, # Tasa de aprendizaje inicial
-                             batch_size=32, # Tamaño del lote 
-                             beta_1=0.9, # Parámetro para el algoritmo de optimización
-                             beta_2=0.999, # Parámetro para el algoritmo de optimización
-                             epsilon=1e-08, # Parámetro para el algoritmo de optimización
-                             random_state=42) # Semilla aleatoria para reproducibilidad
-
-
-    
-    # modelNDN.fit(X_train, Y_train)
-    modelMLP.fit(X_train, Y_train) # Entrenamimento del modelo 
+    modelMLP = MLPClassifier(hidden_layer_sizes=(75, 85), max_iter=2000, activation='logistic',learning_rate_init=0.001, alpha=0.001, random_state=42)
+    # Entrenamiento del modelo
+    modelMLP.fit(X_train, Y_train) 
 
     # Evaluación del modelo 
-    # accuracy = modelNDN.score(X_test, Y_test)
     accuracy = modelMLP.score(X_test, Y_test)
-    accuracy = round(accuracy*100, 3)
-    print(f"Accuracy: {accuracy} %")
+    accuracy = accuracy * 100
+    print('accuracy: ', accuracy)
 
     joblib.dump(modelScaler, 'modelScaler.joblib')
-    # joblib.dump(modelNDN, 'modelNDN.joblib')
     joblib.dump(modelMLP, 'modelMLP.joblib') # Guardar el modelo entrenado 
