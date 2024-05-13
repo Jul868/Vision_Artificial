@@ -12,7 +12,7 @@ from sklearn.neighbors import KNeighborsClassifier # Clasificador de vecinos má
 
 import joblib # Herramienta para guardar y cargar modelos entrenados 
 
-workbook = xlrd.open_workbook('dataNumbers.xlsx') # Abrir libro de excel con los datos
+workbook = xlrd.open_workbook('dataDientes.xlsx') # Abrir libro de excel con los datos
 
 # Función para cargar los datos del archivo de excel
 def load_workbook(file):
@@ -37,11 +37,11 @@ if __name__ == '__main__':
 
     # División de datos en conjunto de entrenamiento y prueba  
     X_train, X_test, Y_train, Y_test = train_test_split(
-        Xscaled, Y, test_size=0.3, random_state=42)
+        Xscaled, Y, test_size=0.15, random_state=42)
 
     # Configuración del modelo (red neuronal) 
     # MLPClassifier -> Clasificador de redes neuronales
-    modelMLP = MLPClassifier(hidden_layer_sizes=(100, 200), max_iter=2000, activation='logistic',learning_rate_init=0.001, alpha=0.001, random_state=42)
+    modelMLP = MLPClassifier(hidden_layer_sizes=(70, 100), max_iter=4000, activation='logistic',learning_rate_init=0.001, alpha=0.001, random_state=42)
     # Entrenamiento del modelo
     modelMLP.fit(X_train, Y_train) 
 
@@ -50,5 +50,9 @@ if __name__ == '__main__':
     accuracy = accuracy * 100
     print('accuracy: ', accuracy)
 
-    joblib.dump(modelScaler, 'modelScaler.joblib')
-    joblib.dump(modelMLP, 'modelMLP.joblib') # Guardar el modelo entrenado 
+    #joblib.dump(modelScaler, 'modelScaler.joblib')
+    #joblib.dump(modelMLP, 'modelMLP.joblib') # Guardar el modelo entrenado
+    
+    #modelo flatten
+    joblib.dump(modelMLP, 'ModelF.joblib') # Guardar el modelo entrenado
+    joblib.dump(modelScaler, 'modelScalerF.joblib') # Guardar el modelo entrenado

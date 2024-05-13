@@ -7,90 +7,98 @@ from Motor import MotorController
 resultados = []
 path = []
 contar = 0
-
+#diente = True
 # Variables Servo
 # motor_controller = MotorController(host='192.168.132.209', port=502)  # Usa la IP y puerto de tu ESP32
 # motor_controller.connect()
 
-mlp = joblib.load('modelMLP.joblib') # Carga del modelo.
-skl = joblib.load('modelScaler.joblib') # Carga del modelo.
+pathVideo = 'imagenes/videos/LI.mp4'
+capture = cv2.VideoCapture(pathVideo)
+
+mlp = joblib.load('modelF.joblib') # Carga del modelo.q
+skl = joblib.load('modelScalerF.joblib') # Carga del modelo.
 print("Modelo cargado...", mlp)
-pathNum = 'test/'
-imgPath = glob(pathNum +'*.jpg')
-print("imgPath: ", imgPath)
 
 
-for iP in imgPath:
-    imgColor = cv2.imread(iP,1)
-    img = cv2.imread(iP,0)
-    img = cv2.resize(img, (800,400))
-    imgColor = cv2.resize(imgColor, (800,400))
+while capture.isOpened(): 
+    ret, frame = capture.read() 
 
-    ret, imgBin = cv2.threshold(img, 125, 255, cv2.THRESH_BINARY) 
+    if not ret: 
+        break
+    frameGray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Cambiar video a escala de gris
+    frameHsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)  # Cambiar video a escala de HSV
 
-    # Encontrar y almacenar contornos
-    contours,hierarchy = cv2.findContours(imgBin.copy(), \
-                                                cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+    cv2.imshow("frame", frame) 
+    frameCamera = frame
+    frame = cv2.resize(frameCamera, (320, 240))
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frameHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    #gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #_, frameBinary = cv2.threshold(gray_frame, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    frameBinary = cv2.inRange(frameHSV, (15, 0, 55), (255, 255, 255))
+    #cv2.waitKey(30)
+    cv2.imshow("frameBinary", frameBinary)
 
-    """min_contour_area = 70
-    contours = [cnt for cnt in contours if cv2.contourArea(cnt) > min_contour_area]
-    contours = sorted(contours, key=lambda x: cv2.boundingRect(x)[0]) # Ordenar contornos de izquierda a derecha"""
+    franja = np.sum(frameBinary[:, 120:200])
+    franja = franja / 255
 
-    for cnt in contours:
-        x,y,w,h = cv2.boundingRect(cnt)
-        a = cv2.contourArea(cnt)            
-        if(a>10):
-            cv2.rectangle(imgColor, (x,y),(x+w, y+h), (255,0,0), 2)
-            cv2.imshow("imgColor",imgColor)
-            imgRoi = imgBin[y:y+h, x:x+w]
-            imgRoiResize = cv2.resize(imgRoi, (40, 60))
-            vectorCaract = imgRoiResize.flatten()         
-            # area = cv2.contourArea(cnt)
-            # p = cv2.arcLength(cnt, True)
-            # M = cv2.moments(cnt)
-            # Hu = cv2.HuMoments(M)
-            # vectorCaract = np.array([area,p,w/h,w,h,Hu[0][0], Hu[1][0], Hu[2][0]], dtype = np.float32)
+    contours, _ = cv2.findContours(frameBinary.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            vectorReshape = vectorCaract.reshape(1, -1) # Redimensionar el vector de características
-            vectorSKL = skl.transform(vectorReshape) # Escalar el vector de características
-            result = mlp.predict(vectorSKL) # Realizar la predicción
-            
-            resultados.append(int(result[0])) 
-            print(path)
+    if franja > 2000 and diente:
+        diente = False
+        for cnt in contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            area = cv2.contourArea(cnt) # Extraigo patrones
+            p = cv2.arcLength(cnt, True) # Extraigo patrones
+            m = cv2.moments(cnt) # Extraigo patrones
+            Hu = cv2.HuMoments(m) # Extraigo patrones
+            aspecto = w/h
+            excentricidad = np.sqrt(np.square(w) + np.square(h))/2
+            if w > 30 and h > 30:
+                cv2.rectangle(frameCamera, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                imgRoi = frameBinary[y:y + h, x:x + w]
+                imgRoiResize = cv2.resize(imgRoi, (40, 60))
+                
+                #vectorCaract = np.array([area,p,w,h,Hu[0][0], Hu[1][0], Hu[2][0], Hu[3][0],aspecto,excentricidad], dtype = np.float32)
+                vectorCaract = imgRoiResize.flatten()
+                vectorReshape = vectorCaract.reshape(1, -1)
+                vectorSKL = skl.transform(vectorReshape)
+                result = mlp.predict(vectorSKL)
+                resultados.append(int(result[0]))
+                print("result: ", result)
+                
+                if int(result[0]) == 0:
+                    print("el diente es: ", 'canino derecho')
+                    # motor_controller.rotate_servo(30)
+                    #print("path: ", imgPath[contar])
+                elif int(result[0]) == 1:
+                    print("el diente es: ", 'canino izquierdo')
+                    # motor_controller.rotate_servo(60)
+                    #print("path: ", imgPath[contar])
+                elif int(result[0]) == 2:
+                    print("el diente es: ", 'central derecho')
+                    # motor_controller.rotate_servo(90)
+                    #print("path: ", imgPath[contar])
+                elif int(result[0]) == 3:
+                    print("el diente es: ", 'central izquierdo')
+                    # motor_controller.rotate_servo(120)
+                    #print("path: ", imgPath[contar])
+                elif int(result[0]) == 4:
+                    print("el diente es: ", 'lateral derecho')
+                    # motor_controller.rotate_servo(150)
+                    #print("path: ", imgPath[contar])
+                elif int(result[0]) == 5:
+                    print("el diente es: ", 'lateral izquierdo')
+                    # motor_controller.rotate_servo(180)
+                    #print("path: ", imgPath[contar])
 
-            print("result: ", result)
-            # print(resultados)
 
-            if int(result[0]) == 0:
-                print("el diente es: ", 'canino derecho')
-                # motor_controller.rotate_servo(30)
-                print("path: ", imgPath[contar])
-            elif int(result[0]) == 1:
-                print("el diente es: ", 'canino izquierdo')
-                # motor_controller.rotate_servo(60)
-                print("path: ", imgPath[contar])
-            elif int(result[0]) == 2:
-                print("el diente es: ", 'central derecho')
-                # motor_controller.rotate_servo(90)
-                print("path: ", imgPath[contar])
-            elif int(result[0]) == 3:
-                print("el diente es: ", 'central izquierdo')
-                # motor_controller.rotate_servo(120)
-                print("path: ", imgPath[contar])
-            elif int(result[0]) == 4:
-                print("el diente es: ", 'lateral derecho')
-                # motor_controller.rotate_servo(150)
-                print("path: ", imgPath[contar])
-            elif int(result[0]) == 5:
-                print("el diente es: ", 'lateral izquierdo')
-                # motor_controller.rotate_servo(180)
-                print("path: ", imgPath[contar])
+    elif franja < 500:
+        diente = True
 
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-    print("Fin...")             
-    contar = contar + 1    
-    # cv2.imshow("imgColor",imgColor)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    # if contar == 12:
-    #     # motor_controller.close()
+capture.release()
+cv2.destroyAllWindows()
+# motor_controller.close()
