@@ -9,8 +9,8 @@ path = []
 contar = 0
 
 # Variables Servo
-motor_controller = MotorController(host='192.168.132.209', port=502)  # Usa la IP y puerto de tu ESP32
-motor_controller.connect()
+# motor_controller = MotorController(host='192.168.132.209', port=502)  # Usa la IP y puerto de tu ESP32
+# motor_controller.connect()
 
 mlp = joblib.load('modelMLP.joblib') # Carga del modelo.
 skl = joblib.load('modelScaler.joblib') # Carga del modelo.
@@ -63,27 +63,27 @@ for iP in imgPath:
 
             if int(result[0]) == 0:
                 print("el diente es: ", 'canino derecho')
-                motor_controller.rotate_servo(30)
+                # motor_controller.rotate_servo(30)
                 print("path: ", imgPath[contar])
             elif int(result[0]) == 1:
                 print("el diente es: ", 'canino izquierdo')
-                motor_controller.rotate_servo(60)
+                # motor_controller.rotate_servo(60)
                 print("path: ", imgPath[contar])
             elif int(result[0]) == 2:
                 print("el diente es: ", 'central derecho')
-                motor_controller.rotate_servo(90)
+                # motor_controller.rotate_servo(90)
                 print("path: ", imgPath[contar])
             elif int(result[0]) == 3:
                 print("el diente es: ", 'central izquierdo')
-                motor_controller.rotate_servo(120)
+                # motor_controller.rotate_servo(120)
                 print("path: ", imgPath[contar])
             elif int(result[0]) == 4:
                 print("el diente es: ", 'lateral derecho')
-                motor_controller.rotate_servo(150)
+                # motor_controller.rotate_servo(150)
                 print("path: ", imgPath[contar])
             elif int(result[0]) == 5:
                 print("el diente es: ", 'lateral izquierdo')
-                motor_controller.rotate_servo(180)
+                # motor_controller.rotate_servo(180)
                 print("path: ", imgPath[contar])
 
 
@@ -92,5 +92,5 @@ for iP in imgPath:
     # cv2.imshow("imgColor",imgColor)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    if contar == 12:
-        motor_controller.close()
+    # if contar == 12:
+    #     # motor_controller.close()

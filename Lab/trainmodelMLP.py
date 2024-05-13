@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     # Configuración del modelo (red neuronal) 
     # MLPClassifier -> Clasificador de redes neuronales
-    modelMLP = MLPClassifier(hidden_layer_sizes=(75, 85), max_iter=2000, activation='logistic',learning_rate_init=0.001, alpha=0.001, random_state=42)
+    modelMLP = MLPClassifier(hidden_layer_sizes=(100, 200), max_iter=2000, activation='logistic',learning_rate_init=0.001, alpha=0.001, random_state=42)
     # Entrenamiento del modelo
     modelMLP.fit(X_train, Y_train) 
 

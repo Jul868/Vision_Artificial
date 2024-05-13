@@ -1,4 +1,0 @@
-images_1
-train.csv
-0
-img

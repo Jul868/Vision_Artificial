@@ -34,7 +34,8 @@ for indice, num in enumerate (vectorNums): # Recorro el vector y lo voy ennumera
                 imgRoiResize = cv2.resize(imgRoi, (40,60))
                 
                 if (areaHW > 1000):
-                    
+                    cv2.imshow('imgRoiResize', imgRoiResize )
+                    cv2.waitKey(0)
                     vectorCaract = imgRoiResize.flatten()
 
                     for c in vectorCaract: # Lo recorro y lo guardo en el excel 
@@ -44,8 +45,7 @@ for indice, num in enumerate (vectorNums): # Recorro el vector y lo voy ennumera
                     col = 1
                     row = row + 1
 
-        cv2.imshow('imgGray', imgBinary)
-        cv2.waitKey(1)
+        
 
 cv2.destroyAllWindows()
 workbook.close()

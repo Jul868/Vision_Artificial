@@ -6,17 +6,19 @@ from Motor import MotorController
 
 resultados = []
 diente = True
+bandera = True
 
 # Variables Servo
-# motor_controller = MotorController(host='192.168.53.209', port=502)  # Usa la IP y puerto de tu ESP32
-# motor_controller.connect()
+motor_controller = MotorController(host='192.168.132.209', port=502)  # Usa la IP y puerto de tu ESP32
+motor_controller.connect()
 
 mlp = joblib.load('modelMLP.joblib')  # Carga del modelo.
 skl = joblib.load('modelScaler.joblib')  # Carga del modelo.
 print("Modelo cargado...", mlp)
 
-pathCamUsb = 0
+pathCamUsb = 1
 capture = cv2.VideoCapture(pathCamUsb, cv2.CAP_DSHOW)
+
 
 while capture.isOpened(): 
     ret, frame = capture.read() 
@@ -59,24 +61,25 @@ while capture.isOpened():
 
                 if int(result[0]) == 0:
                     print("el diente es: ", 'canino derecho')
-                    MotorController.move_servo(30)
+                    motor_controller.rotate_servo(30)
                 elif int(result[0]) == 1:
                     print("el diente es: ", 'canino izquierdo')
-                    MotorController.move_servo(60)
+                    motor_controller.rotate_servo(60)
                 elif int(result[0]) == 2:
                     print("el diente es: ", 'central derecho')
-                    MotorController.move_servo(90)
+                    motor_controller.rotate_servo(90)
                 elif int(result[0]) == 3:
                     print("el diente es: ", 'central izquierdo')
-                    MotorController.move_servo(120)
+                    motor_controller.rotate_servo(120)
                 elif int(result[0]) == 4:
                     print("el diente es: ", 'lateral derecho')
-                    MotorController.move_servo(150)
+                    motor_controller.rotate_servo(150)
                 elif int(result[0]) == 5:
                     print("el diente es: ", 'lateral izquierdo')
-                    MotorController.move_servo(180)
+                    motor_controller.rotate_servo(180)
+    
 
-    elif franja < 1000:
+    elif franja < 100:
         diente = True
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -84,4 +87,4 @@ while capture.isOpened():
 
 capture.release()
 cv2.destroyAllWindows()
-# motor_controller.close()
+motor_controller.close()
