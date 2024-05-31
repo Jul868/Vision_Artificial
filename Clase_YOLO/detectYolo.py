@@ -69,6 +69,7 @@ for pathImg in pathImages: #Aqui se recorren todas las imagenes que se encuentra
         if i in indexes:
             x,y,w,h = boxes[i]
             label = str(classes[class_ids[i]])
+            print(label)
             color = colors[class_ids[i]]
             cv2.rectangle(img,(x,y),(x+w,y+h),color,1)
             cv2.putText(img,label,(x,y+30),font,1,(255,255,255),2)

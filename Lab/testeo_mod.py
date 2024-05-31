@@ -5,8 +5,6 @@ import joblib
 from Motor import MotorController
 
 resultados = []
-path = []
-contar = 0
 #diente = True
 # Variables Servo
 # motor_controller = MotorController(host='192.168.132.209', port=502)  # Usa la IP y puerto de tu ESP32
