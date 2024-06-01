@@ -175,7 +175,7 @@ class RunCamera():
                         y=int(center_y - h/2)
 
                         boxes.append([x,y,w,h]) #put all rectangle areas
-                        self.saveFrame = self.imgDP[y:y+h, x:x+w]
+                        self.saveFrame = self.imgDP[y:y+h+20, x:x+w+20]
                         confidences.append(float(confidence)) #how confidence was that object detected and show that percentage
                         class_ids.append(class_id) #name of the object tha was detected
 

@@ -34,16 +34,7 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.pack
             self.panel = None
 
-            self.total_objetos = 0
-            self.objeto = True
-            self.objeto2 = True
-            self.cambio = True
-            
-            self.anillo = 0
-            self.tensor = 0
-            self.anillo2 = 0
-            self.tensor2 = 0
-            
+        
             self.CD = 0
             self.CI = 0
             self.CED = 0
@@ -51,21 +42,6 @@ class Application(ttk.Frame): # Se le da estructura de un frame
             self.LD = 0
             self.LI = 0
             
-            self.bandera_anillo1=False
-            self.bandera_Tensor1=True
-            self.bandera_anillo2=False
-            self.bandera_Tensor2=True
-            
-            self.array = np.array([1,1])
-            
-            self.x1 = -1
-            self.y1 = -1
-            self.x2 = -1
-            self.y2 = -1
-            self.xx = -1
-            self.yy = -1
-            self.ww = -1
-            self.hh = -1
             
             self.detected_object_image = None
 
@@ -198,8 +174,8 @@ class Application(ttk.Frame): # Se le da estructura de un frame
     def initCameraProcess(self):
         self.camera.start()
         self.getFrameInLabel()
-        self.mlp = joblib.load('ModelF.joblib') # Carga del modelo.q
-        self.skl = joblib.load('modelScalerF.joblib') # Carga del modelo.
+        self.mlp = joblib.load('ModelF.joblib') # Carga del modelo Machine Learning
+        self.skl = joblib.load('modelScalerF.joblib') # Carga del modelo Deep Learning.
         self.net = cv2.dnn.readNet("model.weights","model.cfg")
         print("Modelo cargado...", self.mlp)
 
