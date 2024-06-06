@@ -5,8 +5,8 @@ import joblib
 
 
 
-mlp = joblib.load('modelMLP.joblib') # Carga del modelo. 
-skl = joblib.load('modelScaler.joblib') # Carga del modelo.
+mlp = joblib.load('ModelFrutas.joblib') # Carga del modelo. 
+skl = joblib.load('ScalerFrutas.joblib') # Carga del modelo.
 print("Modelo cargado...", mlp)
 pathNum = 'Test/'
 imgPath = glob(pathNum +'*.jpg')
@@ -45,57 +45,22 @@ for iP in imgPath:
             result = mlp.predict(vectorSKL)
             print("result: ", result)
             if(result == 0):
-                print("Letra: A")
+                print("Letra: CebollaB")
             elif(result == 1):
-                print("Letra: B")
+                print("Letra: CebollaM")
             elif(result == 2):
-                print("Letra: C")
+                print("Letra: LimonB")
             elif(result == 3):
-                print("Letra: D")
+                print("Letra: LimonM")
             elif(result == 4):
-                print("Letra: E")
+                print("Letra: PapaB")
             elif(result == 5):
-                print("Letra: F")
+                print("Letra: PapaM")
             elif(result == 6):
-                print("Letra: G")
+                print("Letra: TomateB")
             elif(result == 7):
-                print("Letra: H")
-            elif(result == 8):
-                print("Letra: I")
-            elif(result == 9):
-                print("Letra: J")
-            elif(result == 10):
-                print("Letra: K")
-            elif(result == 11):
-                print("Letra: L")
-            elif(result == 12):
-                print("Letra: M")
-            elif(result == 13):
-                print("Letra: N")
-            elif(result == 14):
-                print("Letra: O")
-            elif(result == 15):
-                print("Letra: P")
-            elif(result == 16):
-                print("Letra: Q")
-            elif(result == 17):
-                print("Letra: R")
-            elif(result == 18):
-                print("Letra: S")
-            elif(result == 19):
-                print("Letra: T")
-            elif(result == 20):
-                print("Letra: U")
-            elif(result == 21):
-                print("Letra: V")
-            elif(result == 22):
-                print("Letra: W")
-            elif(result == 23):
-                print("Letra: X")
-            elif(result == 24):
-                print("Letra: Y")
-            elif(result == 25):
-                print("Letra: Z")
+                print("Letra: TomateM")
+
             
             cv2.waitKey(0)
             cv2.destroyAllWindows()   
