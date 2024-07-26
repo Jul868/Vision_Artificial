@@ -935,3 +935,66 @@ ERROR:root:Error in roi_abb'Application' object has no attribute 'contours'
 ERROR:root:Error in roi_abb'Application' object has no attribute 'contours'
 ERROR:root:Error in roi_abb'Application' object has no attribute 'contours'
 ERROR:root:Error in roi_abb'Application' object has no attribute 'contours'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera 'RunCamera' object has no attribute 'model'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+ERROR:root:Error startCamera 'RunCamera' object has no attribute 'model'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera 'RunCamera' object has no attribute 'model'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera 'RunCamera' object has no attribute 'model'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+ERROR:root:Error startCamera Communication exception - possible device error/misconfiguration. Original message 'Couldn't read data from stream: 'depth' (X_LINK_ERROR)'
+ERROR:root:Error in getFrameInLabel'RunCamera' object has no attribute 'annotated_frame'
+INFO:root:Init main
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created
+INFO:root:Init main
+INFO:root:Init runCamera process
+INFO:root:GUI created

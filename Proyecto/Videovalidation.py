@@ -14,7 +14,7 @@ anguloFovMed2=30.11
 # Define los nombres de clases de interés
 
 # Load the YOLOv8 model
-model = YOLO('runs/detect/train/weights/best.pt')
+model = YOLO('best.pt')
 
 # Crear pipeline para la cámara y la profundidad
 pipeline = dai.Pipeline()
