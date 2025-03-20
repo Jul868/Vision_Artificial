@@ -9,7 +9,10 @@ imgGray = cv2.imread(path,0)
 
 h,w = imgColor.shape[:2] # Se obtiene el tamaño de la imagen en pixeles (alto, ancho)
 newImgColor=np.zeros_like(imgColor)
-#print(imgColor[h-1,w-1]) # el eror index 221 is put of bounds significa que me pase del tamaño de la imagen
+R, G, B = cv2.split(imgColor) # Se obtienen los canales de color de la imagen
+# Se crea una imagen con los canales de color separados
+imgColor = cv2.merge((R,G,B)) # Se unen los canales de color para formar la imagen original
+#print(imgColor[h-1,w-1]) # el error index 221 is put of bounds significa que me pase del tamaño de la imagen
 
 #Primer Ejemplo: Pintar la imagen solo cambiando aquellos pixeles que cumplan con el color verde mayor a 100 bits
 

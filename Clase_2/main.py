@@ -94,8 +94,8 @@ def main():
 
         showImage("imgColor", imgColor)
         showImage("imgGray", imgGray)
-        #showImage("imgBinary", imgBinary)
-        #showImage("imgBinary2", imgBinary2)
+        showImage("imgBinary", imgBinary)
+        showImage("imgBinary2", imgBinary2)
         if (cv2.waitKey(1) & 0xFF == ord('q')):
             break
 

@@ -30,3 +30,19 @@ while(True):
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
 cv2.destroyAllWindows()
+
+
+#cv2.add() # Suma de dos imagenes
+#cv2.subtract() # Resta de dos imagenes
+
+#aumentar brillo a una imagen
+#matrix = np.ones(imgColor.shape, dtype = "uint8")*100 100 es el valor de brillo es decir se le suma 100 a cada pixel
+#imgColor = cv2.add(imgColor, matrix) # Se suma la matriz de brillo a la imagen original
+
+#disminuir brillo a una imagen
+#matrix = np.ones(imgColor.shape, dtype = "uint8")*100 100 es el valor de brillo es decir se le resta 100 a cada pixel
+#imgColor = cv2.subtract(imgColor, matrix) # Se resta la matriz de brillo a la imagen original
+
+#Adaptative threshold
+#imgGray = cv2.adaptiveThreshold(imgGray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+#cv2.adaptiveThreshold (src, maxValue, adaptiveMethod, thresholdType, blockSize, C[, dst]) -> dst # Se aplica un umbral adaptativo a la imagen en escala de grises
