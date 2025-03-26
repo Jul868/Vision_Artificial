@@ -29,7 +29,9 @@ while(True):
     cv2.imshow("frameHsv", frameHsv)
     if cv2.waitKey(30) & 0xFF == ord('q'):
         break
-cv2.destroyAllWindows()
+
+cv2.release() # Se libera la cámara o el video
+cv2.destroyAllWindows() # Se cierran todas las ventanas generadas
 
 
 #cv2.add() # Suma de dos imagenes
