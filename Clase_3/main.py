@@ -14,7 +14,7 @@ pathCameraPhone = "http://192.168.80.219:8080/shot.jpg"
 #time.sleep(2)
 
 #while(capture.isOpened()):
-    #ret, frame =capture.read()
+    #ret, frame =capture.read() #ret es video capura se esta reaisando bien o mal (true o false)
 while(True):
     imgUrl = urllib.request.urlopen(pathCameraPhone)
     imgNp = np.array(bytearray(imgUrl.read()),dtype=np.uint8) 
